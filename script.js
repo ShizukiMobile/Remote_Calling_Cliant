@@ -46,7 +46,6 @@ function connectToServer(roomId) {
     const audio = document.getElementById("callSound");
   audio.play();
   });
-}
 
 // ボタンから呼び出しを送る関数（必要に応じて呼び出しボタンに使う）
 function sendCall() {
