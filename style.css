@@ -47,3 +47,22 @@ body {
   font-size: 37px;
   margin-top: 20px;
 }
+
+#notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffef96;
+  padding: 15px 25px;
+  border: 1px solid #ffd042;
+  border-radius: 8px;
+  font-size: 1.2em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
