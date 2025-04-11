@@ -58,5 +58,29 @@ function joinRoom() {
   const roomId = document.getElementById("roomInput").value.trim();
   if (roomId) {
     connectToServer(roomId);
+    saveRoomId(roomId);
+    updateRoomList();
   }
 }
+
+function saveRoomId(roomId) {
+  let roomIds = JSON.parse(localStorage.getItem("roomIds") || "[]");
+  if (!roomIds.includes(roomId)) {
+    roomIds.push(roomId);
+    localStorage.setItem("roomIds", JSON.stringify(roomIds));
+  }
+}
+
+function updateRoomList() {
+  const datalist = document.getElementById("roomList");
+  datalist.innerHTML = "";
+  const roomIds = JSON.parse(localStorage.getItem("roomIds") || "[]");
+  roomIds.forEach(id => {
+    const option = document.createElement("option");
+    option.value = id;
+    datalist.appendChild(option);
+  });
+}
+
+// ページ読み込み時に更新
+updateRoomList();
