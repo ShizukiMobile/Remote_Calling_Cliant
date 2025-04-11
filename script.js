@@ -12,42 +12,39 @@ function updateStatus(connected, roomId) {
 
 // サーバーに接続する関数
 function connectToServer(roomId) {
-  // Socket.IOで接続
   socket = io("https://remote-calling-for-school.onrender.com");
 
-  // 接続成功時
   socket.on("connect", () => {
     console.log("接続成功:", socket.id);
     currentRoomId = roomId;
-    socket.emit("join-room", roomId);  // ルーム参加を通知
+    socket.emit("join-room", roomId);
     document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
   });
 
-  // 切断時
   socket.on("disconnect", () => {
     console.log("切断されました");
     updateStatus(false);
     currentRoomId = null;
   });
 
-  // エラー時
   socket.on("connect_error", (err) => {
     console.error("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
   });
 
-  // 呼び出し受信時
   socket.on("call", () => {
     console.log("呼び出しを受信しました！");
-    // ここで通知音を鳴らしたり、UIを変えたりできる
     alert("呼び出しが届きました！");
     const audio = document.getElementById("callSound");
-  audio.play();
+    if (audio) {
+      audio.play().catch((e) => console.log("音声再生エラー:", e));
+    }
   });
+}
 
-// ボタンから呼び出しを送る関数（必要に応じて呼び出しボタンに使う）
+// 呼び出しを送信
 function sendCall() {
   if (socket && currentRoomId) {
     socket.emit("call", currentRoomId);
@@ -83,5 +80,5 @@ function updateRoomList() {
   });
 }
 
-// ページ読み込み時に更新
+// 初期化処理
 updateRoomList();
