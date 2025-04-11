@@ -3,6 +3,10 @@ body {
   font-family: sans-serif;
 }
 
+.main-content {
+  padding-left: 20px;
+}
+
 .title-bar {
   background-color: #4169e1; /* ロイヤルブルー */
   color: white;
