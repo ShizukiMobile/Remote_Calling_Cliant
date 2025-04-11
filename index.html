@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Remote Caller</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>リモート呼び出し</h1>
+  <button onclick="call()">呼び出し！</button>
+
+  <script>
+    const socket = io("https://あなたのサーバー名.onrender.com"); // ここはRenderで作ったサーバーのURLに変更
+
+    function call() {
+      socket.emit("call"); // サーバーにイベント送信
+    }
+
+    socket.on("call", () => {
+      alert("相手から呼び出しがありました！");
+    });
+  </script>
+</body>
+</html>
