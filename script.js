@@ -20,6 +20,7 @@ function connectToServer(roomId) {
     console.log("接続成功:", socket.id);
     currentRoomId = roomId;
     socket.emit("join-room", roomId);  // ルーム参加を通知
+    document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
   });
 
