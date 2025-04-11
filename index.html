@@ -7,49 +7,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
+<body>
   <!-- タイトルバー -->
   <header class="title-bar">
-  <div class="title">リモート呼び出しシステム</div>
-  <div class="status-info">
-    <span id="connectionStatus" style="color: red;">切断</span> |
-    ルームID: <span id="roomId">接続待ち</span>
-  </div>
-</header>
-  
-<body>
+    <div class="title">リモート呼び出しシステム</div>
+    <div class="status-info">
+      <span id="connectionStatus" style="color: red;">切断</span> |
+      ルームID: <span id="roomId">接続待ち</span>
+    </div>
+  </header>
+
   <h2>ルームIDを入力してください</h2>
-  <div style="padding 10px;">
-  <input type="text" id="roomInput" placeholder="例: abc123">
-  <button onclick="joinRoom()">接続</button>
+  <div style="padding: 10px;">
+    <input type="text" id="roomInput" placeholder="例: abc123">
+    <button onclick="joinRoom()">接続</button>
   </div>
 
   <h2>↓ 相手に通知を送る</h2>
   <button onclick="call()" disabled id="callBtn">呼び出し</button>
 
-  <script>
-    const socket = io("https://remote-calling-for-school.onrender.com");
-    let currentRoom = null;
+  <!-- HTML内スクリプトは削除（socket変数の重複を避けるため） -->
+  <!-- <script> ... </script> は不要 -->
 
-    function joinRoom() {
-      const roomId = document.getElementById("roomInput").value.trim();
-      if (roomId) {
-        socket.emit('join-room', roomId);
-        currentRoom = roomId;
-        document.getElementById("callBtn").disabled = false;
-        alert("ルームに接続しました: " + roomId);
-      }
-    }
-
-    function call() {
-      if (currentRoom) {
-        socket.emit("call", currentRoom);
-      }
-    }
-
-    socket.on("call", () => {
-      alert("相手から呼び出しがありました！");
-    });
-  </script>
+  <!-- 外部スクリプト読み込み -->
   <script src="script.js"></script>
 </body>
 </html>
