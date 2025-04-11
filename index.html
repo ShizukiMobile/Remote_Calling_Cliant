@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Remote Caller</title>
+  <title>リモート呼び出しシステム</title>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
+
+  <!-- タイトルバー -->
+  <header class="title-bar">
+    <div class="title">リモート呼び出しシステム</div>
+    <div class="status-info">
+      <span id="connectionStatus">接続中</span> | 
+      ルームID: <span id="roomId">---</span>
+    </div>
+  </header>
+  
 <body>
   <h2>接続コードを入力してください</h2>
   <input type="text" id="roomInput" placeholder="例: abc123">
@@ -37,5 +48,6 @@
       alert("相手から呼び出しがありました！");
     });
   </script>
+  <script src="script.js"></script>
 </body>
 </html>
