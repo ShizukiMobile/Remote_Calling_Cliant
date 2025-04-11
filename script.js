@@ -43,6 +43,8 @@ function connectToServer(roomId) {
     console.log("呼び出しを受信しました！");
     // ここで通知音を鳴らしたり、UIを変えたりできる
     alert("呼び出しが届きました！");
+    const audio = document.getElementById("callSound");
+  audio.play();
   });
 }
 
