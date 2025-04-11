@@ -9,4 +9,4 @@ function updateStatus(connected, roomId) {
 }
 
 // 例：接続成功時に呼び出し
-updateStatus(true, "ABC123");
+//updateStatus(true, "ABC123");
