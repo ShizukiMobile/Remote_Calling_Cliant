@@ -10,7 +10,7 @@
   <button onclick="call()">呼び出し！</button>
 
   <script>
-    const socket = io("https://あなたのサーバー名.onrender.com"); // ここはRenderで作ったサーバーのURLに変更
+    const socket = io("https://remote-calling-for-school.onrender.com"); // ここはRenderで作ったサーバーのURLに変更
 
     function call() {
       socket.emit("call"); // サーバーにイベント送信
