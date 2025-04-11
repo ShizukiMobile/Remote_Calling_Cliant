@@ -10,36 +10,52 @@ function updateStatus(connected, roomId) {
   roomElem.innerText = connected ? roomId : "接続待ち";
 }
 
-// WebSocket サーバーへ接続する関数
+// サーバーに接続する関数
 function connectToServer(roomId) {
-  socket = new WebSocket("wss://remote-calling-for-school.onrender.com"); // ← RenderのURLに合わせる
+  // Socket.IOで接続
+  socket = io("https://remote-calling-for-school.onrender.com");
 
-  socket.addEventListener("open", () => {
+  // 接続成功時
+  socket.on("connect", () => {
+    console.log("接続成功:", socket.id);
     currentRoomId = roomId;
-    socket.send(JSON.stringify({ type: "join", room: roomId }));
-    updateStatus(true, roomId);  // 接続成功
+    socket.emit("join-room", roomId);  // ルーム参加を通知
+    updateStatus(true, roomId);
   });
 
-  socket.addEventListener("close", () => {
-    updateStatus(false);         // 切断された
+  // 切断時
+  socket.on("disconnect", () => {
+    console.log("切断されました");
+    updateStatus(false);
     currentRoomId = null;
   });
 
-  socket.addEventListener("error", () => {
-    updateStatus(false);         // エラーも切断とみなす
+  // エラー時
+  socket.on("connect_error", (err) => {
+    console.error("接続エラー:", err);
+    updateStatus(false);
     currentRoomId = null;
   });
 
-  // サーバーからのメッセージ処理
-  socket.addEventListener("message", (event) => {
-    const data = JSON.parse(event.data);
-    // ここで呼び出し通知などの処理を入れていく
+  // 呼び出し受信時
+  socket.on("call", () => {
+    console.log("呼び出しを受信しました！");
+    // ここで通知音を鳴らしたり、UIを変えたりできる
+    alert("呼び出しが届きました！");
   });
+}
 
+// ボタンから呼び出しを送る関数（必要に応じて呼び出しボタンに使う）
+function sendCall() {
+  if (socket && currentRoomId) {
+    socket.emit("call", currentRoomId);
+  }
+}
+
+// 入力からルームIDを取得して接続する
 function joinRoom() {
   const roomId = document.getElementById("roomInput").value.trim();
   if (roomId) {
     connectToServer(roomId);
   }
-} 
 }
