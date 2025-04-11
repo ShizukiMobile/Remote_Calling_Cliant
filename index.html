@@ -6,14 +6,31 @@
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-  <h1>リモート呼び出し</h1>
-  <button onclick="call()">呼び出し！</button>
+  <h2>接続コードを入力してください</h2>
+  <input type="text" id="roomInput" placeholder="例: abc123">
+  <button onclick="joinRoom()">接続</button>
+
+  <h2>↓ 相手に通知を送る</h2>
+  <button onclick="call()" disabled id="callBtn">呼び出し</button>
 
   <script>
-    const socket = io("https://remote-calling-for-school.onrender.com"); // ここはRenderで作ったサーバーのURLに変更
+    const socket = io("https://remote-calling-for-school.onrender.com");
+    let currentRoom = null;
+
+    function joinRoom() {
+      const roomId = document.getElementById("roomInput").value.trim();
+      if (roomId) {
+        socket.emit('join-room', roomId);
+        currentRoom = roomId;
+        document.getElementById("callBtn").disabled = false;
+        alert("ルームに接続しました: " + roomId);
+      }
+    }
 
     function call() {
-      socket.emit("call"); // サーバーにイベント送信
+      if (currentRoom) {
+        socket.emit("call", currentRoom);
+      }
     }
 
     socket.on("call", () => {
