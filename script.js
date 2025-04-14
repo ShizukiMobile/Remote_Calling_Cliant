@@ -27,6 +27,7 @@ function connectToServer(roomId) {
     showStatusNotification("切断されました", "#ffff00", 30000, "disconnect");
     console.log("切断されました");
     updateStatus(false);
+    socket = null;
     currentRoomId = null;
   });
 
@@ -91,7 +92,7 @@ function sendCall() {
     return;
   }
 
-  if (!currentRoomId) {
+  if (!currentRoomId || currentRoomId.trim() === "") {
     showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 15000);
     return;
   }
@@ -108,6 +109,10 @@ function joinRoom() {
     connectToServer(roomId);
     saveRoomId(roomId);
     updateRoomList();
+  }
+} else {
+    currentRoomId = null;  // ← 追加
+    updateStatus(false);
   }
 }
 
