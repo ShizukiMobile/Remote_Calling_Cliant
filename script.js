@@ -91,11 +91,12 @@ function sendCall() {
     return;
   }
 
-  if (socket && currentRoomId) {
+  if (currentRoomId) {
     socket.emit("call", currentRoomId);
     showStatusNotification("呼び出しを送信しました", "#adff2f", 5000, "sendCall");
   }
 }
+
 
 // 入力からルームIDを取得して接続する
 function joinRoom() {
