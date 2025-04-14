@@ -109,12 +109,12 @@ function joinRoom() {
     connectToServer(roomId);
     saveRoomId(roomId);
     updateRoomList();
-  }
-} else {
-    currentRoomId = null;  // ← 追加
+  } else {
+    currentRoomId = null;
     updateStatus(false);
   }
 }
+
 
 function saveRoomId(roomId) {
   let roomIds = JSON.parse(localStorage.getItem("roomIds") || "[]");
