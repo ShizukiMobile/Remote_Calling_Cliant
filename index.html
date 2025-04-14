@@ -18,6 +18,7 @@
   
 <body class="main-content">
   <h2>ルームIDを入力してください</h2>
+  <p>ルームIDには、英数字・ハイフン・アンダーバーのみを使用することを推奨します。</p>
   <div style="padding: 10px;">
     <input type="text" id="roomInput" placeholder="例: abc123" list="roomList">
 <datalist id="roomList"></datalist>
@@ -27,6 +28,7 @@
 
   <h2>↓ 相手に通知を送る</h2>
   <button class="call-btn" onclick="sendCall()" disabled id="callBtn">呼び出し</button>
+  <p>呼び出し操作を行った端末以外の、すべての端末を呼び出します。</p>
 
   <!-- HTML内スクリプトは削除（socket変数の重複を避けるため） -->
   <!-- <script> ... </script> は不要 -->
