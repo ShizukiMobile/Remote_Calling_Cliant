@@ -20,18 +20,18 @@ function connectToServer(roomId) {
     socket.emit("join-room", roomId);
     document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
-    showStatusNotification("接続しました", "#adff2f", 5000);
+    showStatusNotification("接続しました", "#adff2f", 5000, "connect");
   });
 
   socket.on("disconnect", () => {
-    showStatusNotification("切断されました", "#ffff00");
+    showStatusNotification("切断されました", "#ffff00", 30000, "disconnect");
     console.log("切断されました");
     updateStatus(false);
     currentRoomId = null;
   });
 
   socket.on("connect_error", (err) => {
-    showStatusNotification("接続エラーが発生しました", "#dc143c", 15000);
+    showStatusNotification("接続エラーが発生しました", "#dc143c", 15000, "connect_error");
     console.error("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
@@ -54,33 +54,53 @@ function connectToServer(roomId) {
 });
 }
 
-function showStatusNotification(message, color, duration = null) {
+let activeNotifications = {};  // 通知を識別するマップ
+
+function showStatusNotification(message, color, duration = null, id = null) {
   const container = document.getElementById("statusNotificationContainer");
+
+  // すでに同じIDの通知が存在すれば削除
+  if (id && activeNotifications[id]) {
+    activeNotifications[id].remove();
+    delete activeNotifications[id];
+  }
 
   const div = document.createElement("div");
   div.className = "status-notification";
   div.style.backgroundColor = color;
   div.innerText = message;
 
-  if (duration === null) {
-    // 閉じるボタンを追加
-    const btn = document.createElement("button");
-    btn.innerText = "×";
-    btn.className = "close-btn";
-    btn.onclick = () => div.remove();
-    div.appendChild(btn);
-  } else {
-    setTimeout(() => div.remove(), duration);
-  }
+  // 閉じるボタン（常に追加する仕様に変更）
+  const btn = document.createElement("button");
+  btn.innerText = "×";
+  btn.className = "close-btn";
+  btn.onclick = () => {
+    div.remove();
+    if (id) delete activeNotifications[id];
+  };
+  div.appendChild(btn);
 
   container.appendChild(div);
+
+  if (id) {
+    activeNotifications[id] = div;
+  }
+
+  // 指定時間後に自動で非表示
+  if (duration !== null) {
+    setTimeout(() => {
+      if (div.parentNode) div.remove();
+      if (id) delete activeNotifications[id];
+    }, duration);
+  }
 }
+
 
 // 呼び出しを送信
 function sendCall() {
   if (socket && currentRoomId) {
     socket.emit("call", currentRoomId);
-    showStatusNotification("呼び出しを送信しました", "#adff2f", 5000);
+    showStatusNotification("呼び出しを送信しました", "#adff2f", 5000, "sendCall");
   }
 }
 
