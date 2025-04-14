@@ -20,15 +20,18 @@ function connectToServer(roomId) {
     socket.emit("join-room", roomId);
     document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
+    showStatusNotification("接続しました", "#adff2f", 5000);
   });
 
   socket.on("disconnect", () => {
+    showStatusNotification("切断されました", "#ffff00");
     console.log("切断されました");
     updateStatus(false);
     currentRoomId = null;
   });
 
   socket.on("connect_error", (err) => {
+    showStatusNotification("接続エラーが発生しました", "#dc143c", 15000);
     console.error("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
@@ -51,10 +54,33 @@ function connectToServer(roomId) {
 });
 }
 
+function showStatusNotification(message, color, duration = null) {
+  const container = document.getElementById("statusNotificationContainer");
+
+  const div = document.createElement("div");
+  div.className = "status-notification";
+  div.style.backgroundColor = color;
+  div.innerText = message;
+
+  if (duration === null) {
+    // 閉じるボタンを追加
+    const btn = document.createElement("button");
+    btn.innerText = "×";
+    btn.className = "close-btn";
+    btn.onclick = () => div.remove();
+    div.appendChild(btn);
+  } else {
+    setTimeout(() => div.remove(), duration);
+  }
+
+  container.appendChild(div);
+}
+
 // 呼び出しを送信
 function sendCall() {
   if (socket && currentRoomId) {
     socket.emit("call", currentRoomId);
+    showStatusNotification("呼び出しを送信しました", "#adff2f", 5000);
   }
 }
 
