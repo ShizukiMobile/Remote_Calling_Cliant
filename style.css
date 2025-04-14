@@ -3,6 +3,10 @@ body {
   font-family: sans-serif;
 }
 
+h3{
+    font-weight: normal;
+}
+
 .main-content {
   padding-left: 20px;
 }
