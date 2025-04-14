@@ -87,11 +87,11 @@ function showStatusNotification(message, color, duration = null) {
 // 呼び出しを送信
 function sendCall() {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
-    showNotification("呼び出しに失敗しました。インターネットに接続されているか確認してください。<br>接続状態は画面右上の表示から確認できます。", "#dc143c", 15000, true);
+    showNotification("呼び出しに失敗しました。<br>インターネットに接続されていて、ルームに正常に参加できているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000, true);
     return;
   }
 
-  if (currentRoomId) {
+  if (socket && currentRoomId) {
     socket.emit("call", currentRoomId);
     showStatusNotification("呼び出しを送信しました", "#adff2f", 5000, "sendCall");
   }
