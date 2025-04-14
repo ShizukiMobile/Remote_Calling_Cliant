@@ -54,47 +54,35 @@ function connectToServer(roomId) {
 });
 }
 
-let activeNotifications = {};  // 通知を識別するマップ
-
-function showStatusNotification(message, color, duration = null, id = null) {
+function showStatusNotification(message, color, duration = null) {
   const container = document.getElementById("statusNotificationContainer");
 
-  // すでに同じIDの通知が存在すれば削除
-  if (id && activeNotifications[id]) {
-    activeNotifications[id].remove();
-    delete activeNotifications[id];
-  }
+  // 🌟 既に表示中の通知をすべて削除（これにより「最後の通知のみ」になる）
+  container.innerHTML = "";
 
   const div = document.createElement("div");
   div.className = "status-notification";
   div.style.backgroundColor = color;
   div.innerText = message;
 
-  // 閉じるボタン（常に追加する仕様に変更）
+  // 🌟 閉じるボタンは常に追加（②対応）
   const btn = document.createElement("button");
   btn.innerText = "×";
   btn.className = "close-btn";
-  btn.onclick = () => {
-    div.remove();
-    if (id) delete activeNotifications[id];
-  };
+  btn.onclick = () => div.remove();
   div.appendChild(btn);
 
   container.appendChild(div);
 
-  if (id) {
-    activeNotifications[id] = div;
-  }
-
-  // 指定時間後に自動で非表示
+  // 🌟 durationが指定されている場合、自動的に削除
   if (duration !== null) {
     setTimeout(() => {
-      if (div.parentNode) div.remove();
-      if (id) delete activeNotifications[id];
+      if (container.contains(div)) {
+        div.remove();
+      }
     }, duration);
   }
 }
-
 
 // 呼び出しを送信
 function sendCall() {
