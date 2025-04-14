@@ -63,7 +63,7 @@ function showStatusNotification(message, color, duration = null) {
   const div = document.createElement("div");
   div.className = "status-notification";
   div.style.backgroundColor = color;
-  div.innerText = message;
+  div.innerHTML = message;
 
   // 🌟 閉じるボタンは常に追加（②対応）
   const btn = document.createElement("button");
@@ -87,14 +87,17 @@ function showStatusNotification(message, color, duration = null) {
 // 呼び出しを送信
 function sendCall() {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
-    showStatusNotification("呼び出しに失敗しました。<br>インターネットに接続されていて、ルームに正常に参加できているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000, true);
+    showStatusNotification("インターネットに接続されていないか、呼び出し可能な他の端末が接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000);
     return;
   }
 
-  if (currentRoomId) {
-    socket.emit("call", currentRoomId);
-    showStatusNotification("呼び出しを送信しました", "#adff2f", 5000, "sendCall");
+  if (!currentRoomId) {
+    showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 15000);
+    return;
   }
+
+  socket.emit("call", currentRoomId);
+  showStatusNotification("呼び出しを送信しました。", "#adff2f", 5000, "sendCall");
 }
 
 
