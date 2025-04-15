@@ -88,7 +88,7 @@ function showStatusNotification(message, color, duration = null) {
 // 呼び出しを送信
 function sendCall() {
   if (!socket || !socket.connected) {
-    showStatusNotification("インターネットに接続されていないか、呼び出し可能な他の端末が接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000);
+    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000);
     return;
   }
 
