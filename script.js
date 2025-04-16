@@ -18,7 +18,7 @@ function connectToServer(roomId) {
     console.log("接続成功:", socket.id);
     currentRoomId = roomId;
     socket.emit("join-room", roomId);
-    document.getElementById("callBtn").disabled = false;
+    // document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
     showStatusNotification("接続しました", "#adff2f", 5000, "connect");
   });
@@ -94,11 +94,16 @@ function sendCall() {
 
   if (!currentRoomId || currentRoomId.trim() === "") {
     showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 15000);
+    const errorEl = document.getElementById("callBtnError");
+    errorEl.textContent = "呼び出しできません（ルーム未接続）";
+    errorEl.style.display = "block";
     return;
   }
 
   socket.emit("call", currentRoomId);
   showStatusNotification("呼び出しを送信しました。", "#adff2f", 5000, "sendCall");
+const errorEl = document.getElementById("callBtnError");
+  errorEl.style.display = "none";
 }
 
 
