@@ -35,7 +35,7 @@ function connectToServer(roomId) {
     showStatusNotification("接続エラーが発生しました", "#dc143c", 15000, "connect_error");
     console.error("接続エラー:", err);
     updateStatus(false);
-    currentRoomId = null;
+    // currentRoomId = null;
   });
 
   socket.on("call", () => {
