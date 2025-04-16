@@ -53,6 +53,13 @@ h4{
   margin-top: 20px;
 }
 
+.call-error-message {
+  color: #dc143c;
+  font-size: 0.9em;
+  margin-top: 4px;
+}
+
+
 #notification {
   position: fixed;
   top: 20px;
