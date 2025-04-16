@@ -24,11 +24,11 @@ function connectToServer(roomId) {
   });
 
   socket.on("disconnect", () => {
-    showStatusNotification("切断されました", "#ffff00", 30000, "disconnect");
-    console.log("切断されました");
+    showStatusNotification("サーバーから切断されました", "#ffff00", 30000, "disconnect");
+    console.log("サーバーから切断されました");
     updateStatus(false);
     socket = null;
-    currentRoomId = null;
+    // currentRoomId = null;
   });
 
   socket.on("connect_error", (err) => {
@@ -87,22 +87,24 @@ function showStatusNotification(message, color, duration = null) {
 
 // 呼び出しを送信
 function sendCall() {
-  if (!socket || !socket.connected) {
-    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000);
-    return;
-  }
+  const errorEl = document.getElementById("callBtnError");
 
   if (!currentRoomId || currentRoomId.trim() === "") {
     showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 15000);
-    const errorEl = document.getElementById("callBtnError");
-    errorEl.textContent = "呼び出しできません（ルーム未接続）";
+    errorEl.textContent = "ルームに参加していないため呼び出しできません。ルームに再参加してやり直してください。";
+    errorEl.style.display = "block";
+    return;
+  }
+
+  if (!socket || !socket.connected) {
+    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", 20000);
+    errorEl.textContent = "インターネットに接続されていないため呼び出しできません。接続状態を確認してください。";
     errorEl.style.display = "block";
     return;
   }
 
   socket.emit("call", currentRoomId);
   showStatusNotification("呼び出しを送信しました。", "#adff2f", 5000, "sendCall");
-const errorEl = document.getElementById("callBtnError");
   errorEl.style.display = "none";
 }
 
