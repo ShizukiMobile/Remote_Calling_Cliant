@@ -27,7 +27,8 @@
   </div>
 
   <h2>↓ 相手に通知を送る</h2>
-  <button class="call-btn" onclick="sendCall()" disabled id="callBtn">呼び出し</button>
+  <button class="call-btn" onclick="sendCall()" id="callBtn">呼び出し</button>
+  <div id="callBtnError" class="call-error-message" style="display: none;"></div>
   <p>呼び出し操作を行った端末以外の、すべての端末を呼び出します。</p>
 
   <!-- HTML内スクリプトは削除（socket変数の重複を避けるため） -->
