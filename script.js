@@ -142,5 +142,18 @@ function updateRoomList() {
   });
 }
 
+function updateCurrentTime() {
+  const now = new Date();
+  const formatted = now.toLocaleString("ja-JP", { hour12: false });
+  const display = document.getElementById("currentTimeDisplay");
+  if (display) {
+    display.textContent = `現在時刻: ${formatted}`;
+  }
+}
+
+updateCurrentTime(); // 初期表示
+setInterval(updateCurrentTime, 1000); // 1秒ごとに更新
+
+
 // 初期化処理
 updateRoomList();
