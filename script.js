@@ -119,6 +119,7 @@ function joinRoom() {
   } else {
     currentRoomId = null;
     updateStatus(false);
+    showStatusNotification("ルームIDを空白にしたまま接続することはできません。", "#dc143c", 5000, "emptyRoomId");
   }
 }
 
