@@ -86,7 +86,7 @@ function showStatusNotification(message, color, duration = null) {
 }
 
 function hideStatusNotification(key) {
-  const element = document.querySelector(`.status-box[data-key="${key}"]`);
+  const element = document.querySelector(`.status-notification[data-key="${key}"]`);
   if (element) {
     element.style.animation = "fadeOut 0.3s ease-in-out";
     element.addEventListener("animationend", () => {
