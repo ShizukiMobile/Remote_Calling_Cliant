@@ -20,7 +20,7 @@ function connectToServer(roomId) {
     socket.emit("join-room", roomId);
     // document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
-    showStatusNotification("サーバーに接続しました。", "#adff2f", 5000, "connect");
+    showStatusNotification("接続しました。", "#adff2f", 5000, "connect");
   });
 
   socket.on("disconnect", () => {
@@ -113,7 +113,7 @@ function sendCall() {
 function joinRoom() {
   const roomId = document.getElementById("roomInput").value.trim();
   if (roomId) {
-    showStatusNotification("接続しています。しばらくお待ちください。<br>(サーバーの状態によっては、数分かかることがあります。)", "#ffff00", 15000, "connecting");
+    showStatusNotification("接続しています。しばらくお待ちください。<br>(サーバーの状態によっては、数分かかることがあります。)", "#ffff00", 0, "connecting");
     connectToServer(roomId);
     saveRoomId(roomId);
     updateRoomList();
