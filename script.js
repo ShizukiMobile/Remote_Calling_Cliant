@@ -85,6 +85,16 @@ function showStatusNotification(message, color, duration = null) {
   }
 }
 
+function hideStatusNotification(key) {
+  const element = document.querySelector(`.status-box[data-key="${key}"]`);
+  if (element) {
+    element.style.animation = "fadeOut 0.3s ease-in-out";
+    element.addEventListener("animationend", () => {
+      element.remove();
+    }, { once: true }); // 1回だけ実行
+  }
+}
+
 // 呼び出しを送信
 function sendCall() {
   const errorEl = document.getElementById("callBtnError");
