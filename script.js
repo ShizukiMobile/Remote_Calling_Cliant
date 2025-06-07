@@ -77,12 +77,15 @@ function showStatusNotification(message, color, duration = null) {
 
   // 🌟 durationが指定されている場合、自動的に削除
   if (duration !== null) {
-    setTimeout(() => {
-      if (container.contains(div)) {
+  setTimeout(() => {
+    if (container.contains(div)) {
+      // アニメーションを追加
+      div.style.animation = "fadeOut 0.3s ease-in-out";
+      div.addEventListener("animationend", () => {
         div.remove();
-      }
-    }, duration);
-  }
+      }, { once: true });
+    }
+  }, duration);
 }
 
 function hideStatusNotification(key) {
