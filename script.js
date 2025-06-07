@@ -24,7 +24,7 @@ function connectToServer(roomId) {
   });
 
   socket.on("disconnect", () => {
-    showStatusNotification("サーバーから切断されました。インターネット接続を確認して、再接続してください。", "#ffff00", 30000, "disconnect");
+    showStatusNotification("サーバーから切断されました。インターネット接続を確認して、再接続してください。", "#FFFF70", "#ffff00", 30000, "disconnect");
     console.log("サーバーから切断されました");
     updateStatus(false);
     socket = null;
@@ -128,7 +128,7 @@ function sendCall() {
 function joinRoom() {
   const roomId = document.getElementById("roomInput").value.trim();
   if (roomId) {
-    showStatusNotification("接続しています。しばらくお待ちください。<br>(サーバーの状態によっては、数分かかることがあります。)", "#ffff00", 0, "connecting");
+    showStatusNotification("接続しています。しばらくお待ちください。<br>(サーバーの状態によっては、数分かかることがあります。)", "#FFFF70", "#ffff00", 0, "connecting");
     connectToServer(roomId);
     saveRoomId(roomId);
     updateRoomList();
@@ -170,7 +170,6 @@ function updateCurrentTime() {
 
 updateCurrentTime(); // 初期表示
 setInterval(updateCurrentTime, 1000); // 1秒ごとに更新
-
 
 // 初期化処理
 updateRoomList();
