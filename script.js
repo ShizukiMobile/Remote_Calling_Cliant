@@ -121,7 +121,7 @@ function sendCall() {
 function joinRoom() {
   const roomId = document.getElementById("roomInput").value.trim();
   if (roomId) {
-    showStatusNotification("接続しています。しばらくお待ちください。<br>(サーバーの状態によっては、数分かかることがあります。)", "#FFFF70", "#ffff00", 0, "connecting");
+    showStatusNotification("接続しています。しばらくお待ちください。<br>(サーバーの状態によっては、数分かかることがあります。)", "#FFFF70", "#ffff00", null, "connecting");
     connectToServer(roomId);
     saveRoomId(roomId);
     updateRoomList();
