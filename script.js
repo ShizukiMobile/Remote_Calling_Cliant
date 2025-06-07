@@ -12,8 +12,10 @@ function updateStatus(connected, roomId) {
 
 // サーバーに接続する関数
 function connectToServer(roomId) {
-  socket = io("https://remote-calling-for-school.onrender.com");
-
+  socket = io("https://remote-calling-for-school.onrender.com", {
+    timeout: 60000
+  });
+  
   socket.on("connect", () => {
     console.log("接続成功:", socket.id);
     currentRoomId = roomId;
