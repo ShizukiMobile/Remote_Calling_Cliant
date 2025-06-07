@@ -40,18 +40,11 @@ function connectToServer(roomId) {
 
   socket.on("call", () => {
     console.log("呼び出しを受信しました！");
-     // 通知音を即再生
-  const audio = document.getElementById("callSound");
-  audio.play();
+    // 通知音を即再生
+    const audio = document.getElementById("callSound");
+    audio.play();
 
-  // 通知メッセージを表示
-  const notification = document.getElementById("notification");
-  notification.classList.remove("hidden");
-
-  // 数秒後に自動で非表示にする
-  setTimeout(() => {
-    notification.classList.add("hidden");
-  }, 5000);  // 5秒後に非表示
+    showStatusNotification("呼び出しを受信しました！", "#FFFF70", "#ffff00", 5000, "calling");
 });
 }
 
