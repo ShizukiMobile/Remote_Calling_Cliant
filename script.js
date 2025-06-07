@@ -76,7 +76,7 @@ function showStatusNotification(message, color, duration = null) {
   container.appendChild(div);
 
   // 🌟 durationが指定されている場合、自動的に削除
-  if (duration !== null) {
+  /*if (duration !== null) {
   setTimeout(() => {
     if (container.contains(div)) {
       // アニメーションを追加
@@ -86,7 +86,7 @@ function showStatusNotification(message, color, duration = null) {
       }, { once: true });
     }
   }, duration);
-}
+}*/
 
 function hideStatusNotification(key) {
   const element = document.querySelector(`.status-notification[data-key="${key}"]`);
