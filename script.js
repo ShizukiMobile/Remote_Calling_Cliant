@@ -59,7 +59,7 @@ function showStatusNotification(message, backgroundColor, borderColor = null, du
   const div = document.createElement("div");
   div.className = "status-notification";
   div.style.backgroundColor = backgroundColor;
-  div.style.borderColor = borderColor;
+  div.style.border = `1px solid ${borderColor}`;
   div.innerHTML = message;
 
   // 🌟 閉じるボタンは常に追加（②対応）
