@@ -29,8 +29,8 @@ function connectToServer(roomId) {
     showStatusNotification("サーバーから切断されました。インターネット接続を確認して、再接続してください。", "#FFFF70", "#ffff00", 30000, "disconnect");
     console.log("サーバーから切断されました");
     updateStatus(false);
-    socket = null;
-    // currentRoomId = null;
+    /*socket = null;
+    currentRoomId = null;*/
   });
 
   socket.on("connect_error", (err) => {
