@@ -16,9 +16,21 @@ function connectToServer(roomId) {
     transports: ['websocket'], // WebSocketのみを使用
     timeout: 60000
   });
+
+  function logWithTimestamp(message, ...optionalParams) {
+  const now = new Date();
+  const timestamp = now.toLocaleString();  // 例: "2025/6/6 14:30:15"
+  console.log(`[${timestamp}] ${message}`, ...optionalParams);
+}
+
+  function errorWithTimestamp(message, ...optionalParams) {
+  const now = new Date();
+  const timestamp = now.toLocaleString();
+  console.error(`[${timestamp}] ${message}`, ...optionalParams);
+}
   
   socket.on("connect", () => {
-    console.log("接続成功:", socket.id);
+    logWithTimestamp("接続成功:", socket.id);
     currentRoomId = roomId;
     socket.emit("join-room", roomId);
     // document.getElementById("callBtn").disabled = false;
@@ -27,8 +39,8 @@ function connectToServer(roomId) {
   });
 
   socket.on("disconnect", () => {
-    showStatusNotification("サーバーから切断されました。インターネット接続を確認して、再接続してください。", "#FFFF70", "#ffff00", 30000, "disconnect");
-    console.log("サーバーから切断されました");
+    showStatusNotification("サーバーから切断されました。再接続を試行します。<br>自動的に再接続されない場合、インターネット接続を確認してください。", "#FFFF70", "#ffff00", 30000, "disconnect");
+    logWithTimestamp("サーバーから切断されました");
     updateStatus(false);
     /*socket = null;
     currentRoomId = null;*/
@@ -36,13 +48,13 @@ function connectToServer(roomId) {
 
   socket.on("connect_error", (err) => {
     showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#ffffff", "connect_error");
-    console.error("接続エラー:", err);
+    errorWithTimestamp("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
   });
 
   socket.on("call", () => {
-    console.log("呼び出しを受信しました！");
+    logWithTimestamp("呼び出しを受信しました！");
     // 通知音を即再生
     const audio = document.getElementById("callSound");
     audio.play();
