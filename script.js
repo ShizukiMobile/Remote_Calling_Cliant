@@ -35,7 +35,7 @@ function connectToServer(roomId) {
   });
 
   socket.on("connect_error", (err) => {
-    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "connect_error");
+    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#f0f0f0", "connect_error");
     console.error("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
@@ -51,7 +51,7 @@ function connectToServer(roomId) {
 });
 }
 
-function showStatusNotification(message, backgroundColor, borderColor = null, duration = null) {
+function showStatusNotification(message, backgroundColor, borderColor = null, duration = null,  textColor = "#000") {
   const container = document.getElementById("statusNotificationContainer");
 
   // 🌟 既に表示中の通知をすべて削除（これにより「最後の通知のみ」になる）
@@ -61,6 +61,7 @@ function showStatusNotification(message, backgroundColor, borderColor = null, du
   div.className = "status-notification";
   div.style.backgroundColor = backgroundColor;
   div.style.border = `2.5px solid ${borderColor}`;
+  div.style.color = textColor;
   div.innerHTML = message;
 
   // 🌟 閉じるボタンは常に追加（②対応）
@@ -102,14 +103,14 @@ function sendCall() {
   const errorEl = document.getElementById("callBtnError");
 
   if (!currentRoomId || currentRoomId.trim() === "") {
-    showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", 15000);
+    showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", "#f0f0f0", 15000);
     errorEl.textContent = "ルームに参加していないため呼び出しできません。ルームに再参加してやり直してください。";
     errorEl.style.display = "block";
     return;
   }
 
   if (!socket || !socket.connected) {
-    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", 20000);
+    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", "#f0f0f0", 20000);
     errorEl.textContent = "インターネットに接続されていないため呼び出しできません。接続状態を確認してください。";
     errorEl.style.display = "block";
     return;
@@ -132,7 +133,7 @@ function joinRoom() {
   } else {
     /*currentRoomId = null;
     updateStatus(false);*/
-    showStatusNotification("ルームIDを空白にしたまま接続することはできません。", "#dc143c", "#b22222", 5000, "emptyRoomId");
+    showStatusNotification("ルームIDを空白にしたまま接続することはできません。", "#dc143c", "#b22222", 5000, "#f0f0f0", "emptyRoomId");
   }
 }
 
