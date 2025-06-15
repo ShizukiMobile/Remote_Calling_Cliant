@@ -35,7 +35,7 @@ function connectToServer(roomId) {
   });
 
   socket.on("connect_error", (err) => {
-    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#fff", "connect_error");
+    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#ffffff", "connect_error");
     console.error("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
@@ -103,14 +103,14 @@ function sendCall() {
   const errorEl = document.getElementById("callBtnError");
 
   if (!currentRoomId || currentRoomId.trim() === "") {
-    showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", 15000, "#fff");
+    showStatusNotification("ルームに参加していないため、呼び出しに失敗しました。<br>ルームに参加して、もう一度呼び出し操作を行ってください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", 15000, "#ffffff");
     errorEl.textContent = "ルームに参加していないため呼び出しできません。ルームに再参加してやり直してください。";
     errorEl.style.display = "block";
     return;
   }
 
   if (!socket || !socket.connected) {
-    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", 20000, "#fff");
+    showStatusNotification("インターネットに接続されていないため、呼び出しに失敗しました。<br>インターネットに正常に接続できていて、正しいルームに参加しているか確認してください。<br>接続状態と現在参加しているルームのルームIDは、画面右上の表示で確認できます。", "#dc143c", "#b22222", 20000, "#ffffff");
     errorEl.textContent = "インターネットに接続されていないため呼び出しできません。接続状態を確認してください。";
     errorEl.style.display = "block";
     return;
@@ -133,7 +133,7 @@ function joinRoom() {
   } else {
     /*currentRoomId = null;
     updateStatus(false);*/
-    showStatusNotification("ルームIDを空白にしたまま接続することはできません。", "#dc143c", "#b22222", 5000, "#fff", "emptyRoomId");
+    showStatusNotification("ルームIDを空白にしたまま接続することはできません。", "#dc143c", "#b22222", 5000, "#ffffff", "emptyRoomId");
   }
 }
 
