@@ -13,6 +13,7 @@ function updateStatus(connected, roomId) {
 // サーバーに接続する関数
 function connectToServer(roomId) {
   socket = io("https://remote-calling-for-school.onrender.com", {
+    transports: ['websocket'], // WebSocketのみを使用
     timeout: 60000
   });
   
@@ -34,7 +35,7 @@ function connectToServer(roomId) {
   });
 
   socket.on("connect_error", (err) => {
-    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。", "#dc143c", "#b22222", 15000, "connect_error");
+    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "connect_error");
     console.error("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
