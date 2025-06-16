@@ -39,7 +39,7 @@ function connectToServer(roomId) {
   });
 
   socket.on("disconnect", () => {
-    showStatusNotification("サーバーから切断されました。再接続を試行します。<br>自動的に再接続されない場合、インターネット接続を確認してください。", "#FFFF70", "#ffff00", 30000, "disconnect");
+    showStatusNotification("サーバーから切断されました。再接続を試行します。<br>自動的に再接続されない場合、インターネット接続を確認してください。<br>(再接続には、通常30秒から1分ほどかかります。)", "#FFFF70", "#ffff00", 30000, "disconnect");
     logWithTimestamp("サーバーから切断されました");
     updateStatus(false);
     /*socket = null;
