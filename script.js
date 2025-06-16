@@ -14,7 +14,7 @@ function updateStatus(connected, roomId) {
 function connectToServer(roomId) {
   socket = io("https://remote-calling-for-school.onrender.com", {
     transports: ['websocket'], // WebSocketのみを使用
-    timeout: 60000
+    timeout: 75000
   });
 
   function logWithTimestamp(message, ...optionalParams) {
