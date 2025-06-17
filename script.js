@@ -14,7 +14,11 @@ function updateStatus(connected, roomId) {
 function connectToServer(roomId) {
   socket = io("https://remote-calling-for-school.onrender.com", {
     transports: ['websocket'], // WebSocketのみを使用
-    timeout: 75000
+    timeout: 75000,
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 5000,
+    reconnectionDelayMax: 5000
   });
 
   function logWithTimestamp(message, ...optionalParams) {
@@ -39,7 +43,7 @@ function connectToServer(roomId) {
   });
 
   socket.on("disconnect", () => {
-    showStatusNotification("サーバーから切断されました。再接続を試行します。<br>自動的に再接続されない場合、インターネット接続を確認してください。<br>(再接続には、通常30秒から1分ほどかかります。)", "#FFFF70", "#ffff00", 30000, "disconnect");
+    showStatusNotification("サーバーから切断されました。5秒後に自動で再接続処理を開始します。<br>自動的に再接続されない場合、インターネット接続を確認してください。<br>(再接続には、通常30秒から1分ほどかかります。)", "#FFFF70", "#ffff00", 30000, "disconnect");
     logWithTimestamp("サーバーから切断されました");
     updateStatus(false);
     /*socket = null;
@@ -47,10 +51,16 @@ function connectToServer(roomId) {
   });
 
   socket.on("connect_error", (err) => {
-    showStatusNotification("接続エラーが発生しました。インターネット接続を確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#ffffff", "connect_error");
+    showStatusNotification("接続エラーが発生しました。5秒後に自動で再接続処理を開始します。<br>インターネットに接続されていることを確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#ffffff", "connect_error");
     errorWithTimestamp("接続エラー:", err);
     updateStatus(false);
     currentRoomId = null;
+  });
+
+socket.on("reconnect_failed", () => {
+    showStatusNotification("再接続の上限回数に達したため、自動での再接続を中止しました。<br>インターネットに接続されていることを確認して、もう一度ルームに参加してください。<br>何度もこのエラーが表示される場合、ページを再読み込みしてください。", "#dc143c", "#b22222", 30000, "#ffffff", "reconnect_failed");
+    errorWithTimestamp("再接続の上限回数に到達しました");
+    updateStatus(false);
   });
 
   socket.on("call", () => {
