@@ -1,5 +1,7 @@
 let socket;
 let currentRoomId = null;
+let connectErrorCount = 0;
+const maxReconnectAttempts = 5;
 
 function updateStatus(connected, roomId) {
   const statusElem = document.getElementById("connectionStatus");
@@ -40,6 +42,7 @@ function connectToServer(roomId) {
     // document.getElementById("callBtn").disabled = false;
     updateStatus(true, roomId);
     showStatusNotification("接続しました。", "#adff2f", "#7cbf1c", 5000, "connect");
+    connectErrorCount = 0;
   });
 
   socket.on("disconnect", () => {
@@ -53,15 +56,25 @@ function connectToServer(roomId) {
   socket.on("connect_error", (err) => {
     showStatusNotification("接続エラーが発生しました。5秒後に自動で再接続処理を開始します。<br>インターネットに接続されていることを確認してください。<br>(WebSocket通信に非対応のブラウザを使用しているか、ご使用のインターネット環境でWebSocket通信がブロックされていると、接続できない場合があります。)", "#dc143c", "#b22222", 15000, "#ffffff", "connect_error");
     errorWithTimestamp("接続エラー:", err);
+    connectErrorCount++;
     updateStatus(false);
-    currentRoomId = null;
+    // currentRoomId = null;
+
+    if (connectErrorCount >= maxReconnectAttempts) {
+    showStatusNotification("再接続の上限回数に達したため、自動での再接続を中止しました。<br>インターネットに接続されていることを確認して、もう一度ルームに参加してください。<br>何度もこのエラーが表示される場合、ページを再読み込みしてください。", "#dc143c", "#b22222", 30000, "#ffffff", "connect_error");
+    socket.disconnect(); // 再接続ループを終了
+    updateStatus(false);
+  } /*else {
+    showStatusNotification(`接続エラーが発生しました。${connectErrorCount}回目`, "#ffff99", "#ffcc00", 10000, "#000", "connect_error_retry");
+  }*/
+    
   });
 
-socket.on("reconnect_failed", () => {
+/*socket.on("reconnect_failed", () => {
     showStatusNotification("再接続の上限回数に達したため、自動での再接続を中止しました。<br>インターネットに接続されていることを確認して、もう一度ルームに参加してください。<br>何度もこのエラーが表示される場合、ページを再読み込みしてください。", "#dc143c", "#b22222", 30000, "#ffffff", "reconnect_failed");
     errorWithTimestamp("再接続の上限回数に到達しました");
     updateStatus(false);
-  });
+  });*/
 
   socket.on("call", () => {
     logWithTimestamp("呼び出しを受信しました！");
@@ -158,7 +171,6 @@ function joinRoom() {
     showStatusNotification("ルームIDを空白にしたまま接続することはできません。", "#dc143c", "#b22222", 5000, "#ffffff", "emptyRoomId");
   }
 }
-
 
 function saveRoomId(roomId) {
   let roomIds = JSON.parse(localStorage.getItem("roomIds") || "[]");
