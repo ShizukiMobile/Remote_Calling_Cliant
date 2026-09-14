@@ -10,6 +10,13 @@
   <!-- タイトルバー -->
   <header class="title-bar">
     <div class="title">  リモート呼び出しシステム</div>
+    <div id="wakeLockControl">
+  <label>
+    <input type="checkbox" id="wakeLockToggle">
+    スリープ防止
+  </label>
+  <span id="wakeLockStatus">無効</span>
+</div>
     <div class="status-info">
       <span id="connectionStatus" style="color: red;">切断</span> |
       ルームID: <span id="roomId">接続待ち</span>
