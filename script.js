@@ -219,7 +219,7 @@ async function requestWakeLock() {
     wakeLock = await navigator.wakeLock.request("screen");
 
     wakeLock.addEventListener("release", () => {
-      logWithTimestamp("自動スリープの抑制を無効にしました。");
+      logWithTimestamp("ユーザーによって無効にされたため、自動スリープの抑制を無効にしました。");
       wakeLock = null;
       updateWakeLockStatus(false);
     });
@@ -242,7 +242,7 @@ async function releaseWakeLock() {
   }
 
   updateWakeLockStatus(false);
-  logWithTimestamp("自動スリープの抑制を無効にしました。");
+  logWithTimestamp("サイトがバックグラウンドになったなどの要因で、自動スリープの抑制が無効になりました。");
 }
 
 document.addEventListener("visibilitychange", async () => {
