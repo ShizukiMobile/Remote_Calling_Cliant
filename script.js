@@ -4,6 +4,18 @@ let wakeLock = null;
 let connectErrorCount = 0;
 const maxReconnectAttempts = 5;
 
+function logWithTimestamp(message, ...optionalParams) {
+  const now = new Date();
+  const timestamp = now.toLocaleString();  // 例: "2025/6/6 14:30:15"
+  console.log(`[${timestamp}] ${message}`, ...optionalParams);
+}
+
+  function errorWithTimestamp(message, ...optionalParams) {
+  const now = new Date();
+  const timestamp = now.toLocaleString();
+  console.error(`[${timestamp}] ${message}`, ...optionalParams);
+}
+
 function updateStatus(connected, roomId) {
   const statusElem = document.getElementById("connectionStatus");
   const roomElem = document.getElementById("roomId");
@@ -24,17 +36,6 @@ function connectToServer(roomId) {
     reconnectionDelayMax: 5000
   });
 
-  function logWithTimestamp(message, ...optionalParams) {
-  const now = new Date();
-  const timestamp = now.toLocaleString();  // 例: "2025/6/6 14:30:15"
-  console.log(`[${timestamp}] ${message}`, ...optionalParams);
-}
-
-  function errorWithTimestamp(message, ...optionalParams) {
-  const now = new Date();
-  const timestamp = now.toLocaleString();
-  console.error(`[${timestamp}] ${message}`, ...optionalParams);
-}
   
   socket.on("connect", () => {
     logWithTimestamp("接続成功:", socket.id);
