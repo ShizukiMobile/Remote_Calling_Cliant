@@ -1,5 +1,6 @@
 let socket;
 let currentRoomId = null;
+let wakeLock = null;
 let connectErrorCount = 0;
 const maxReconnectAttempts = 5;
 
@@ -200,8 +201,75 @@ function updateCurrentTime() {
   }
 }
 
+async function requestWakeLock() {
+  if (!("wakeLock" in navigator)) {
+    showStatusNotification(
+      "このブラウザは自動スリープの抑制に対応していません。",
+      "#dc143c",
+      "#b22222",
+      10000,
+      "#ffffff",
+      "wakeLockUnsupported"
+    );
+    return false;
+  }
+
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+
+    wakeLock.addEventListener("release", () => {
+      logWithTimestamp("自動スリープの抑制を無効にしました。");
+      wakeLock = null;
+      updateWakeLockStatus(false);
+    });
+
+    updateWakeLockStatus(true);
+    logWithTimestamp("自動スリープの抑制を有効にしました。");
+    return true;
+
+  } catch (err) {
+    errorWithTimestamp("自動スリープの抑制を有効にできませんでした。", err);
+    updateWakeLockStatus(false);
+    return false;
+  }
+}
+
+async function releaseWakeLock() {
+  if (wakeLock !== null) {
+    await wakeLock.release();
+    wakeLock = null;
+  }
+
+  updateWakeLockStatus(false);
+  logWithTimestamp("自動スリープの抑制を無効にしました。");
+}
+
+document.addEventListener("visibilitychange", async () => {
+  if (
+    document.visibilityState === "visible" &&
+    document.getElementById("wakeLockToggle")?.checked &&
+    wakeLock === null
+  ) {
+    await requestWakeLock();
+  }
+});
+
 updateCurrentTime(); // 初期表示
 setInterval(updateCurrentTime, 1000); // 1秒ごとに更新
 
 // 初期化処理
 updateRoomList();
+
+const wakeLockToggle = document.getElementById("wakeLockToggle");
+
+wakeLockToggle.addEventListener("change", async () => {
+  if (wakeLockToggle.checked) {
+    const success = await requestWakeLock();
+
+    if (!success) {
+      wakeLockToggle.checked = false;
+    }
+  } else {
+    await releaseWakeLock();
+  }
+});
