@@ -254,6 +254,14 @@ document.addEventListener("visibilitychange", async () => {
   }
 });
 
+function updateWakeLockStatus(enabled) {
+    const status = document.getElementById("wakeLockStatus");
+
+    if (status) {
+        status.textContent = enabled ? "有効" : "無効";
+    }
+}
+
 updateCurrentTime(); // 初期表示
 setInterval(updateCurrentTime, 1000); // 1秒ごとに更新
 
