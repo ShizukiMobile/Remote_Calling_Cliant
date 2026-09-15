@@ -27,6 +27,7 @@ function updateStatus(connected, roomId) {
 
 // サーバーに接続する関数
 function connectToServer(roomId) {
+  connectErrorCount = 0;
   socket = io("https://remote-calling-for-school.onrender.com", {
     transports: ['websocket'], // WebSocketのみを使用
     timeout: 75000,
