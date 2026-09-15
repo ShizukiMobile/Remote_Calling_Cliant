@@ -29,6 +29,10 @@ h4{
   font-weight: bold;
 }
 
+#wakeLockStatus {
+    margin-left: 10px;
+}
+
 .status-info {
   font-size: 16px;
   margin-right: 10px;
