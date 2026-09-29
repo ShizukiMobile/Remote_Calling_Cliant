@@ -3,6 +3,7 @@ let currentRoomId = null;
 let wakeLock = null;
 let connectErrorCount = 0;
 const maxReconnectAttempts = 5;
+let pushServiceWorkerRegistration = null;
 
 function logWithTimestamp(message, ...optionalParams) {
   const now = new Date();
@@ -266,6 +267,31 @@ function updateWakeLockStatus(enabled) {
 
 updateCurrentTime(); // 初期表示
 setInterval(updateCurrentTime, 1000); // 1秒ごとに更新
+
+async function registerPushServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    errorWithTimestamp(
+      "このブラウザはService Workerに対応していません。"
+    );
+    return null;
+  }
+
+  try {
+    pushServiceWorkerRegistration =
+      await navigator.serviceWorker.register("./service-worker.js");
+
+    logWithTimestamp("Service Workerを登録しました。");
+
+    return pushServiceWorkerRegistration;
+  } catch (err) {
+    errorWithTimestamp(
+      "Service Workerの登録に失敗しました。",
+      err
+    );
+
+    return null;
+  }
+}
 
 // 初期化処理
 updateRoomList();
