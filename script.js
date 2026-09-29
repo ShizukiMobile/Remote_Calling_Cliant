@@ -293,6 +293,38 @@ async function registerPushServiceWorker() {
   }
 }
 
+async function enablePushNotifications() {
+  if (!("Notification" in window)) {
+    showStatusNotification(
+      "このブラウザは通知に対応していません。",
+      "#dc143c",
+      "#b22222",
+      10000,
+      "#ffffff"
+    );
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== "granted") {
+    showStatusNotification(
+      "通知が許可されませんでした。",
+      "#dc143c",
+      "#b22222",
+      10000,
+      "#ffffff"
+    );
+    return;
+  }
+
+  const registration =
+    pushServiceWorkerRegistration ||
+    await navigator.serviceWorker.ready;
+
+  // ここでPush Subscriptionを取得する
+}
+
 // 初期化処理
 updateRoomList();
 
