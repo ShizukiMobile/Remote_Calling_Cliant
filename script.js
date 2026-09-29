@@ -340,6 +340,7 @@ await fetch(
     })
   }
 );
+}
   
 const enablePushButton =
   document.getElementById("enablePushButton");
