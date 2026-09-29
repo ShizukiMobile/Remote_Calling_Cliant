@@ -325,6 +325,13 @@ async function enablePushNotifications() {
   // ここでPush Subscriptionを取得する
 }
 
+const enablePushButton =
+  document.getElementById("enablePushButton");
+
+enablePushButton.addEventListener("click", () => {
+  enablePushNotifications();
+});
+
 // 初期化処理
 updateRoomList();
 
