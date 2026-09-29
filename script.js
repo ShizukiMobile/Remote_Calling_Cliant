@@ -327,7 +327,6 @@ async function enablePushNotifications() {
     userVisibleOnly: true,
     applicationServerKey: vapidPublicKey
   });
-}
 
 await fetch(
   "https://remote-calling-for-school.onrender.com/subscribe",
@@ -341,7 +340,7 @@ await fetch(
     })
   }
 );
-
+  
 const enablePushButton =
   document.getElementById("enablePushButton");
 
