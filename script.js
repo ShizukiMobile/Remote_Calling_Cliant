@@ -322,8 +322,25 @@ async function enablePushNotifications() {
     pushServiceWorkerRegistration ||
     await navigator.serviceWorker.ready;
 
-  // ここでPush Subscriptionを取得する
+  const subscription =
+  await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: vapidPublicKey
+  });
 }
+
+await fetch(
+  "https://remote-calling-for-school.onrender.com/subscribe",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      subscription: subscription
+    })
+  }
+);
 
 const enablePushButton =
   document.getElementById("enablePushButton");
@@ -334,6 +351,7 @@ enablePushButton.addEventListener("click", () => {
 
 // 初期化処理
 updateRoomList();
+registerPushServiceWorker();
 
 const wakeLockToggle = document.getElementById("wakeLockToggle");
 
