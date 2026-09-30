@@ -4,7 +4,7 @@ let wakeLock = null;
 let connectErrorCount = 0;
 const maxReconnectAttempts = 5;
 let pushServiceWorkerRegistration = null;
-const vapidPublicKey = BNhLIArVxk1V1U9J5Qbf_IXZewsaeOnhJj0_cVHeOuFBYJjJxTbQT1tYehaNxJDLSSuuZCTdb8ClIyOEwJIp9PY;
+const vapidPublicKey = "BNhLIArVxk1V1U9J5Qbf_IXZewsaeOnhJj0_cVHeOuFBYJjJxTbQT1tYehaNxJDLSSuuZCTdb8ClIyOEwJIp9PY";
 
 function logWithTimestamp(message, ...optionalParams) {
   const now = new Date();
