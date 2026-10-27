@@ -390,8 +390,8 @@ async function enablePushNotifications() {
 
   showStatusNotification(
     "通知が有効になりました。",
-    "#228b22",
-    "#006400",
+    "#adff2f", 
+    "#7cbf1c",
     5000,
     "#ffffff"
   );
