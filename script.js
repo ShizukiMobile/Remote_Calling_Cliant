@@ -337,7 +337,8 @@ await fetch(
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      subscription: subscription
+      subscription: subscription,
+      roomId: currentRoomId
     })
   }
 );
