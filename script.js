@@ -4,6 +4,7 @@ let wakeLock = null;
 let connectErrorCount = 0;
 const maxReconnectAttempts = 5;
 let pushServiceWorkerRegistration = null;
+let pushServiceWorkerPromise = null;
 const vapidPublicKey = "BNhLIArVxk1V1U9J5Qbf_IXZewsaeOnhJj0_cVHeOuFBYJjJxTbQT1tYehaNxJDLSSuuZCTdb8ClIyOEwJIp9PY";
 
 function logWithTimestamp(message, ...optionalParams) {
@@ -269,86 +270,165 @@ function updateWakeLockStatus(enabled) {
 updateCurrentTime(); // 初期表示
 setInterval(updateCurrentTime, 1000); // 1秒ごとに更新
 
-async function registerPushServiceWorker() {
+function registerPushServiceWorker() {
   if (!("serviceWorker" in navigator)) {
-    errorWithTimestamp(
-      "このブラウザはService Workerに対応していません。"
+    return Promise.reject(
+      new Error("このブラウザはService Workerに対応していません。")
     );
-    return null;
   }
 
-  try {
-    pushServiceWorkerRegistration =
-      await navigator.serviceWorker.register("./service-worker.js");
+  if (!pushServiceWorkerPromise) {
+    pushServiceWorkerPromise = navigator.serviceWorker
+      .register("./service-worker.js")
+      .then((registration) => {
+        pushServiceWorkerRegistration = registration;
 
-    logWithTimestamp("Service Workerを登録しました。");
+        logWithTimestamp(
+          "Service Workerを登録しました。"
+        );
 
-    return pushServiceWorkerRegistration;
-  } catch (err) {
-    errorWithTimestamp(
-      "Service Workerの登録に失敗しました。",
-      err
-    );
+        return registration;
+      })
+      .catch((err) => {
+        pushServiceWorkerPromise = null;
 
-    return null;
+        errorWithTimestamp(
+          "Service Workerの登録に失敗しました。",
+          err
+        );
+
+        throw err;
+      });
   }
+
+  return pushServiceWorkerPromise;
 }
 
 async function enablePushNotifications() {
   if (!("Notification" in window)) {
-    showStatusNotification(
-      "このブラウザは通知に対応していません。",
-      "#dc143c",
-      "#b22222",
-      10000,
-      "#ffffff"
+    throw new Error(
+      "この環境では通知APIを利用できません。"
     );
-    return;
   }
 
-  const permission = await Notification.requestPermission();
+  if (!("serviceWorker" in navigator)) {
+    throw new Error(
+      "この環境ではService Workerを利用できません。"
+    );
+  }
+
+  if (!("PushManager" in window)) {
+    throw new Error(
+      "この環境ではPush通知を利用できません。"
+    );
+  }
+
+  if (!currentRoomId) {
+    throw new Error("ルームIDが設定されていません。");
+  }
+
+  // ユーザーのタップを起点に、許可要求を開始する
+  const permissionPromise =
+    Notification.permission === "default"
+      ? Notification.requestPermission()
+      : Promise.resolve(Notification.permission);
+
+  const permission = await permissionPromise;
 
   if (permission !== "granted") {
-    showStatusNotification(
-      "通知が許可されませんでした。",
-      "#dc143c",
-      "#b22222",
-      10000,
-      "#ffffff"
-    );
-    return;
+    throw new Error("通知が許可されませんでした。");
   }
 
+  // Service Workerの登録と準備を確認する
   const registration =
-    pushServiceWorkerRegistration ||
-    await navigator.serviceWorker.ready;
+    await registerPushServiceWorker();
 
-  const subscription =
-  await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: vapidPublicKey
-  });
+  await navigator.serviceWorker.ready;
 
-await fetch(
-  "https://remote-calling-for-school.onrender.com/subscribe",
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      subscription: subscription,
-      roomId: currentRoomId
-    })
+  if (!registration.active) {
+    throw new Error(
+      "Service Workerが有効になっていません。"
+    );
   }
-);
+
+  // 既存のSubscriptionを優先して利用する
+  let subscription =
+    await registration.pushManager.getSubscription();
+
+  if (!subscription) {
+    subscription =
+      await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapidPublicKey
+      });
+  }
+
+  // サーバーにSubscriptionを登録する
+  const response = await fetch(
+    "https://remote-calling-for-school.onrender.com/subscribe",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        subscription,
+        roomId: currentRoomId
+      })
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Subscription登録に失敗しました。HTTP ${response.status}`
+    );
+  }
+
+  logWithTimestamp(
+    "Push Subscriptionの登録が完了しました。"
+  );
+
+  showStatusNotification(
+    "通知が有効になりました。",
+    "#228b22",
+    "#006400",
+    5000,
+    "#ffffff"
+  );
 }
   
 const enablePushButton =
   document.getElementById("enablePushButton");
 
-enablePushButton.addEventListener("click", () => {
-  enablePushNotifications();
+let isEnablingPush = false;
+
+enablePushButton.addEventListener("click", async () => {
+  if (isEnablingPush) {
+    return;
+  }
+
+  isEnablingPush = true;
+  enablePushButton.disabled = true;
+
+  try {
+    await enablePushNotifications();
+  } catch (err) {
+    errorWithTimestamp(
+      "通知の有効化に失敗しました。",
+      err
+    );
+
+    showStatusNotification(
+      err.message || "通知の有効化に失敗しました。",
+      "#dc143c",
+      "#b22222",
+      10000,
+      "#ffffff"
+    );
+  } finally {
+    isEnablingPush = false;
+    enablePushButton.disabled = false;
+  }
 });
 
 // 初期化処理
